@@ -1,0 +1,91 @@
+﻿@page "/products"
+@inject IProductService ProductService
+@inject ISubCategoryService SubCategoryService
+@inject ITransactionService TransactionService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using System.Security.Claims
+@using System.Collections.Generic
+@using System.Threading.Tasks
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.DropDowns
+@using Microsoft.AspNetCore.Components
+
+<h3>Products</h3>
+
+<AuthorizeView>
+    <Authorized>
+        <SfGrid DataSource="@products" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update" })" TValue="Products">
+            <GridEditSettings AllowAdding="true" AllowDeleting="false" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
+            <GridEvents TValue="Products" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
+            <GridColumns>
+                <GridColumn Field="@nameof(Products.ProductId)" HeaderText="ProductID" IsPrimaryKey="true" Width="100" AllowAdding="false" AllowEditing="false"></GridColumn>
+                <GridColumn Field="@nameof(Products.ProductName)" HeaderText="ProductName" Width="150"></GridColumn>
+                <GridForeignColumn Field="@nameof(Products.SubCategoryId)" HeaderText="SubCategoryName" ForeignKeyValue="SubCategoryName" ForeignDataSource="@activeSubCategories" Width="150"></GridForeignColumn>
+                <GridColumn Field="@nameof(Products.Active)" HeaderText="Active" Type="ColumnType.Boolean" DisplayAsCheckBox="true" Width="100" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(Products.InActiveDate)" HeaderText="Inactive Date" Width="150" Format="yyyy-MM-dd" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(Products.CreateBy)" HeaderText="Create By" Width="150" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(Products.CreateDate)" HeaderText="Create Date" Width="150" Format="yyyy-MM-dd" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(Products.UpdateBy)" HeaderText="Update By" Width="150" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(Products.UpdateDate)" HeaderText="Update Date" Width="150" Format="yyyy-MM-dd" AllowEditing="false " AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(Products.Balance)" HeaderText="Balance" Width="150"></GridColumn>
+            </GridColumns>
+        </SfGrid>
+    </Authorized>
+    <NotAuthorized>
+        <p>You must be logged in to access this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private IEnumerable<Products> products;
+    private IEnumerable<SubCategories> subcategories;
+    private IEnumerable<SubCategories> activeSubCategories;
+    private ClaimsPrincipal user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+        await LoadProducts();
+        await LoadSubCategories();
+    }
+
+    private async Task LoadProducts()
+    {
+        products = await ProductService.GetAllProductsAsync();
+    }
+
+    private async Task LoadSubCategories()
+    {
+        subcategories = await SubCategoryService.GetAllSubCategoriesAsync();
+        activeSubCategories = subcategories.Where(c => c.Active).ToList();
+    }
+
+    public async void ActionBeginHandler(ActionEventArgs<Products> args)
+    {
+        if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            var username = user?.Identity?.Name ?? "Unknown";
+            if (args.Action == "Add")
+            {
+                args.Data.CreateBy = username;
+                args.Data.UpdateBy = username;
+                await ProductService.InsertProductAsync(args.Data);
+            }
+            else if (args.Action == "Edit")
+            {
+                args.Data.UpdateBy = username;
+                await ProductService.UpdateProductAsync(args.Data);
+            }
+        }
+    }
+
+    public async void ActionCompleteHandler(ActionEventArgs<Products> args)
+    {
+        if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            await LoadProducts();
+            StateHasChanged();
+        }
+    }
+}

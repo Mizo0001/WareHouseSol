@@ -1,0 +1,88 @@
+﻿@page "/subcategories"
+@inject ISubCategoryService SubCategoryService
+@inject ICategoryService CategoryService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using System.Security.Claims
+@using System.Collections.Generic
+@using System.Threading.Tasks
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.DropDowns
+
+<h3>SubCategories</h3>
+<AuthorizeView>
+    <Authorized>
+        <SfGrid DataSource="@subcategories" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update" })" TValue="SubCategories">
+            <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
+            <GridEvents TValue="SubCategories" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
+            <GridColumns>
+                <GridColumn Field="@nameof(SubCategories.SubCategoryId)" HeaderText="SubCategoryID" IsPrimaryKey="true" Width="100" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.SubCategoryName)" HeaderText="SubCategoryName" Width="150"></GridColumn>
+                <GridForeignColumn Field="@nameof(SubCategories.CategoryId)" HeaderText="CategoryName" ForeignKeyValue="CategoryName" ForeignDataSource="@activeCategories" Width="150"></GridForeignColumn>
+                <GridColumn Field="@nameof(SubCategories.Active)" HeaderText="Active" Type="ColumnType.Boolean" DisplayAsCheckBox="true" Width="100" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.InActiveDate)" HeaderText="Inactive Date" Width="150" Format="yyyy-MM-dd" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.CreateBy)" HeaderText="Create By" Width="150" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.CreateDate)" HeaderText="Create Date" Width="150" Format="yyyy-MM-dd" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.UpdateBy)" HeaderText="Update By" Width="150" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.UpdateDate)" HeaderText="Update Date" Width="150" Format="yyyy-MM-dd" AllowEditing="false" AllowAdding="false"></GridColumn>
+            </GridColumns>
+        </SfGrid>
+    </Authorized>
+    <NotAuthorized>
+        <p>You must be logged in to access this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
+@code {
+    private IEnumerable<SubCategories> subcategories;
+    private IEnumerable<Categories> categories;
+    private IEnumerable<Categories> activeCategories;
+    private ClaimsPrincipal user;
+
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+        await LoadSubCategories();
+        await LoadCategories();
+    }
+
+    private async Task LoadSubCategories()
+    {
+        subcategories = await SubCategoryService.GetAllSubCategoriesAsync();
+    }
+
+    private async Task LoadCategories()
+    {
+        categories = await CategoryService.GetAllCategoriesAsync();
+        activeCategories = categories.Where(c => c.Active);
+    }
+
+    public async void ActionBeginHandler(ActionEventArgs<SubCategories> args)
+    {
+        if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            var username = user?.Identity?.Name ?? "Unknown";
+            if (args.Action == "Add")
+            {
+                args.Data.CreateBy = username;
+                args.Data.UpdateBy = username;
+                await SubCategoryService.InsertSubCategoryAsync(args.Data);
+            }
+            else if (args.Action == "Edit")
+            {
+                args.Data.UpdateBy = username;
+                await SubCategoryService.UpdateSubCategoryAsync(args.Data);
+            }
+        }
+    }
+
+    public async void ActionCompleteHandler(ActionEventArgs<SubCategories> args)
+    {
+        if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            await LoadSubCategories();
+            StateHasChanged();
+        }
+    }
+}

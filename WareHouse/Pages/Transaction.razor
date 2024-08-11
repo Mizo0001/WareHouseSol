@@ -1,0 +1,251 @@
+﻿    @page "/transactions"
+    @attribute [Authorize]
+    @inject ITransactionService TransactionService
+    @inject IProductDetailsService ProductDetailsService
+    @inject IProductService ProductService
+    @inject ITransactionTypeService TransactionTypeService
+    @inject IWareHouseService WareHouseService
+    @inject IJSRuntime JSRuntime
+    @inject AuthenticationStateProvider AuthenticationStateProvider
+    @using Microsoft.AspNetCore.Components.Authorization
+    @using Syncfusion.Blazor.Grids
+    @using Syncfusion.Blazor.Inputs
+    @using Syncfusion.Blazor.DropDowns
+    @using Syncfusion.Blazor.Calendars
+    @using Syncfusion.Blazor.Data
+    @using Syncfusion.Blazor.Notifications
+    @using System.Security.Claims
+    @using System.Collections.Generic
+    @using System.Threading.Tasks
+    @using Syncfusion.Blazor.SplitButtons
+
+
+    <h3>Transactions</h3>
+
+    <AuthorizeView>
+        <Authorized>
+
+
+            <p>Pick a Date></p>
+            <SfDateRangePicker TValue="DateTime?" StartDate="@startDate" EndDate="@endDate">
+                <DateRangePickerEvents TValue="DateTime?" ValueChange="@onChange"></DateRangePickerEvents>
+            </SfDateRangePicker>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="control-wrapper">
+                        <div class="cascading">
+                            <label class="example-label">Warehouse</label>
+                            <SfDropDownList TValue="int" DataSource="@warehouses" Placeholder="Select a warehouse" @bind-Value="selectedWarehouseId" TItem="WareHouses">
+                                <DropDownListEvents TItem="WareHouses" TValue="int" ValueChange="ChangeWareHouse"></DropDownListEvents>
+                                <DropDownListFieldSettings Text="WarehouseName" Value="WarehouseId"></DropDownListFieldSettings>
+                            </SfDropDownList>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="control-wrapper">
+                        <div class="cascading">
+                            <label class="example-label">Product</label>
+                            <SfDropDownList TValue="int" TItem="ProductDetails" Placeholder="Select a product" @bind-Value="selectedDetailId" DataSource="@filteredProducts">
+                                <DropDownListTemplates TItem="ProductDetails">
+                                    <ItemTemplate Context="itemContext">
+                                        <span>
+                                            <span class="ProductName">@((itemContext as ProductDetails).ProductName)</span>
+                                            <span class="ExpiryDate">-@((itemContext as ProductDetails).ExpiryDate)</span>
+                                        </span>
+                                    </ItemTemplate>
+                                </DropDownListTemplates>
+                                <DropDownListFieldSettings Text="ProductName" Value="DetailID"></DropDownListFieldSettings>
+                            </SfDropDownList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="control-wrapper">
+                        <label class="example-label">Transaction Type</label>
+                        <SfDropDownList TValue="int" DataSource="@types" Placeholder="Select a transaction type" @bind-Value="selectedTransactionTypeId" TItem="TransactionTypes">
+                            <DropDownListFieldSettings Text="TypeName" Value="TransactionTypeID"></DropDownListFieldSettings>
+                        </SfDropDownList>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="control-wrapper">
+                        <label class="example-label">Quantity</label>
+                        <SfNumericTextBox TValue="int" Placeholder="Enter Quantity" @bind-Value="quantity"></SfNumericTextBox>
+                    </div>
+                </div>
+            </div>
+
+        
+            <SfProgressButton EnableProgress="true" Content="Submit Transaction" CssClass="e-hide-spinner">
+                    <ProgressButtonEvents OnBegin="SubmitTransaction"></ProgressButtonEvents>
+            </SfProgressButton>
+
+
+
+            <SfGrid DataSource="@transactions" AllowFiltering="true"  TValue="Transactions">
+                <GridEditSettings AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
+                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                <GridEvents TValue="Transactions" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
+                <GridColumns>
+                    <GridColumn Field="@nameof(Transactions.TransactionID)" HeaderText="TransactionID" IsPrimaryKey="true" ValidationRules="@(new ValidationRules { Required = true })" TextAlign="TextAlign.Center" Width="120" AllowFiltering="false" AllowAdding="false" AllowEditing="false"></GridColumn>
+                    <GridForeignColumn Field="@nameof(Transactions.WarehouseId)" HeaderText="Warehouse Name" ForeignKeyValue="WarehouseName" ForeignDataSource="@warehouses" Width="150" AllowFiltering="false" AllowEditing="true"></GridForeignColumn>
+                    <GridForeignColumn Field="@nameof(Transactions.ProductId)" HeaderText="Product Name" ForeignKeyValue="ProductName" ForeignDataSource="@activeProducts" Width="150" AllowFiltering="false" AllowEditing="true"></GridForeignColumn>
+                    <GridForeignColumn Field="@nameof(Transactions.TransactionTypeID)" HeaderText="Type Name" ForeignKeyValue="TypeName" ForeignDataSource="@types" Width="150" AllowFiltering="false" AllowEditing="true"></GridForeignColumn>
+                    <GridColumn Field="@nameof(Transactions.ExpiryDate)" HeaderText="Expiry Date" Width="150" AllowFiltering="false" AllowEditing="true"></GridColumn>
+                    <GridColumn Field="@nameof(Transactions.Quantity)" HeaderText="Quantity" ValidationRules="@(new ValidationRules { Required = true })" TextAlign="TextAlign.Center" Width="150" AllowFiltering="false" AllowEditing="true"></GridColumn>
+                    <GridColumn Field="@nameof(Transactions.TransactionDate)" HeaderText="Transaction Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" AllowEditing="true" AllowAdding="false"></GridColumn>
+                    <GridColumn Field="@nameof(Transactions.CreateBy)" HeaderText="Create By" Width="150" AllowAdding="false" AllowEditing="false" AllowFiltering="false"></GridColumn>
+                    <GridColumn Field="@nameof(Transactions.CreateDate)" HeaderText="Create Date" Format="yyyy-MM-dd" Width="150" AllowAdding="false" AllowEditing="false" AllowFiltering="false"></GridColumn>
+                </GridColumns>
+            </SfGrid>
+        </Authorized>
+        <NotAuthorized>
+            <p>You must be logged in to access this page.</p>
+        </NotAuthorized>
+    </AuthorizeView>
+
+    <SfToast ID="toast_default" @ref="ToastObj">
+        <ToastPosition X="Right"></ToastPosition>
+    </SfToast>
+
+
+
+    @code {
+        private IEnumerable<WareHouses> warehouses;
+        private IEnumerable<Transactions> transactions;
+        private IEnumerable<Products> activeProducts;
+        private IEnumerable<TransactionTypes> types;
+        private IEnumerable<ProductDetails> filteredExpiryDates;
+        private IEnumerable<ProductDetails> filteredProducts;
+        private ClaimsPrincipal user;
+
+        private DateTime? startDate { get; set; }
+        private DateTime? endDate { get; set; }
+
+        public bool EnableExpiryDateDropDown = false;
+        public Query ExpiryDateQuery { get; set; } = null;
+        public string ExpiryDateValue { get; set; } = null;
+
+        private int selectedDetailId;
+        private int selectedTransactionTypeId;
+        private int selectedExpiryDate;
+        private int quantity;
+        private int selectedWarehouseId;
+
+
+
+        SfToast ToastObj;
+        private string ToastContent;
+
+
+        protected override async Task OnInitializedAsync()
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            user = authState.User;
+            await LoadProducts();
+            await LoadTransactionTypes();
+            await LoadTransactions(); 
+            await LoadWarehouses();
+
+        }
+        private async Task LoadTransactions()
+        {
+            transactions = await TransactionService.GetAllTransactionsAsync(startDate, endDate);
+        }
+
+        private async Task LoadProducts()
+        {
+            var products = await ProductService.GetAllProductsAsync();
+            activeProducts = products.Where(c => c.Active).ToList();
+        }
+
+        private async Task LoadTransactionTypes()
+        {
+            types = await TransactionTypeService.GetAllTransactionTypeAsync();
+        }
+        private async Task LoadWarehouses()
+        {
+            warehouses = await WareHouseService.GetAllWareHousesAsync(); 
+        }
+        private async void onChange(RangePickerEventArgs<DateTime?> args)
+        {
+            startDate = args.StartDate;
+            endDate = args.EndDate;
+            await LoadTransactions();
+            StateHasChanged();
+        }
+        public async void ChangeWareHouse(Syncfusion.Blazor.DropDowns.ChangeEventArgs<int, WareHouses> args)
+        {
+            filteredProducts = await ProductDetailsService.GetAllProductsInWareHouse(args.Value);
+            StateHasChanged();
+        }
+    
+        private async Task SubmitTransaction()
+        {
+        var productDetailsList = await ProductDetailsService.GetProductDetailByIdAndExpiryDateAsync(selectedDetailId);
+        var productDetails = productDetailsList.FirstOrDefault();
+
+            if (selectedTransactionTypeId == 3)
+            {
+
+                if ( productDetails!= null && productDetails.Balance >= quantity)
+                {
+
+                    var newTransaction = new Transactions
+                        {
+                            ProductId = productDetails.ProductId,
+                            ExpiryDate = productDetails.ExpiryDate,
+                            TransactionTypeID = selectedTransactionTypeId,
+                            Quantity = quantity,
+                            TransactionDate = DateTime.Now,
+                            CreateBy = user.Identity.Name,
+                            CreateDate = DateTime.Now,
+                            WarehouseId = selectedWarehouseId // Include warehouse ID
+                        };
+                    await TransactionService.InsertTransactionAsync(newTransaction);
+                    await LoadTransactions();
+                    ToastContent = "Transaction added successfully.";
+                    await Task.Delay(100);
+                    await ToastObj.ShowAsync(new ToastModel { Title = "Transaction Success", Content = "Transaction added successfully!", CssClass = "e-toast-success" });
+                }
+                else
+                {
+                    ToastContent = "Insufficient balance for this transaction.";
+                    await Task.Delay(100);
+                    await ToastObj.ShowAsync(new ToastModel { Title = "Transaction Error", Content = "Insufficient Balance!", CssClass = "e-toast-warning" });
+                }
+            }
+            else
+            {
+                var newTransaction = new Transactions
+                    {
+                        ProductId = productDetails.ProductId,
+                        ExpiryDate = productDetails.ExpiryDate,
+                        TransactionTypeID = selectedTransactionTypeId,
+                        Quantity = quantity,
+                        TransactionDate = DateTime.Now,
+                        CreateBy = user.Identity.Name,
+                        CreateDate = DateTime.Now,
+                        WarehouseId = selectedWarehouseId
+                    };
+                await TransactionService.InsertTransactionAsync(newTransaction);
+                await LoadTransactions();
+                ToastContent = "Transaction added successfully.";
+                await Task.Delay(100);
+                await ToastObj.ShowAsync(new ToastModel { Title = "Transaction Success", Content = "Transaction added successfully!", CssClass = "e-toast-success" });
+            }
+        }
+
+
+        private async Task ActionCompleteHandler(ActionEventArgs<Transactions> args)
+        {
+            if (args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+            {
+                await LoadTransactions();
+            }
+        }
+    }

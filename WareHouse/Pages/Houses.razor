@@ -1,0 +1,77 @@
+﻿@page "/warehouses"
+@attribute [Authorize]
+@inject IWareHouseService WareHouseService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using Microsoft.AspNetCore.Components.Authorization
+@using Syncfusion.Blazor.Grids
+@using Syncfusion.Blazor.Inputs
+@using System.Security.Claims
+@using System.Collections.Generic
+@using System.Threading.Tasks
+
+
+<h3>WareHouse</h3>
+
+
+<AuthorizeView>
+    <Authorized>
+        <SfGrid DataSource="@warehouses" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update" })" TValue="WareHouses">
+            <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
+            <GridEvents TValue="WareHouses" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
+            <GridColumns>
+                <GridColumn Field="@nameof(WareHouses.WarehouseId)" HeaderText="WareHouse ID" IsPrimaryKey="true" ValidationRules="@(new ValidationRules { Required = true })" TextAlign="TextAlign.Center" Width="120" AllowAdding="false" AllowEditing="false"></GridColumn>
+                <GridColumn Field="@nameof(WareHouses.WarehouseName)" HeaderText="WareHosue Name" ValidationRules="@(new ValidationRules { Required = true })" Width="150"></GridColumn>
+                <GridColumn Field="@nameof(WareHouses.Location)" HeaderText="Location" Width="150"></GridColumn>
+                <GridColumn Field="@nameof(WareHouses.Active)" HeaderText="Active" Type="ColumnType.Boolean" DisplayAsCheckBox="true" Width="100"></GridColumn>
+                <GridColumn Field="@nameof(WareHouses.InactiveDate)" HeaderText="Inactive Date" Type="ColumnType.Date" Format="yyyy-MM-dd" Width="150" AllowAdding="false" AllowEditing="false"></GridColumn>
+                <GridColumn Field="@nameof(WareHouses.CreateBy)" HeaderText="Create By" Width="150" AllowAdding="false" AllowEditing="false"></GridColumn>
+                <GridColumn Field="@nameof(WareHouses.CreateDate)" HeaderText="Create Date" Type="ColumnType.Date" Format="yyyy-MM-dd" Width="150" AllowAdding="false" AllowEditing="false"></GridColumn>
+                <GridColumn Field="@nameof(WareHouses.UpdateBy)" HeaderText="Update By" Width="150" AllowAdding="false" AllowEditing="false"></GridColumn>
+                <GridColumn Field="@nameof(WareHouses.UpdateDate)" HeaderText="Update Date" Type="ColumnType.Date" Format="yyyy-MM-dd" Width="150" AllowAdding="false" AllowEditing="false"></GridColumn>
+            </GridColumns>
+        </SfGrid>
+    </Authorized>
+    <NotAuthorized>
+        <p>You must be logged in to access this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
+@code {
+    private IEnumerable<WareHouses> warehouses;
+    private ClaimsPrincipal user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+        await LoadWarehouses();
+    }
+    private async Task LoadWarehouses()
+    {
+        warehouses = await WareHouseService.GetAllWareHousesAsync();
+    }
+    public void ActionBeginHandler(ActionEventArgs<WareHouses> Args)
+    {
+        if (Args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            var username = user?.Identity?.Name ?? "Unknown";
+            if (Args.Action == "Add")
+            {
+                Args.Data.CreateBy = username;
+                WareHouseService.InsertWareHouseAsync(Args.Data);
+            }
+            else if (Args.Action == "Edit")
+            {
+                Args.Data.UpdateBy = username;
+                WareHouseService.UpdateWarehouseAsync(Args.Data);
+            }
+        }
+    }
+    public async void ActionCompleteHandler(ActionEventArgs<WareHouses> Args)
+    {
+        if (Args.RequestType.Equals(Syncfusion.Blazor.Grids.Action.Save))
+        {
+            await LoadWarehouses();
+            StateHasChanged();
+        }
+    }
+}
