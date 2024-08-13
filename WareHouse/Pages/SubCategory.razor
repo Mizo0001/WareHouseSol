@@ -11,19 +11,20 @@
 <h3>SubCategories</h3>
 <AuthorizeView>
     <Authorized>
-        <SfGrid DataSource="@subcategories" ID="Grid" @ref="DefaultGrid" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update", "ExcelExport"})" AllowExcelExport="true" TValue="SubCategories">
+        <SfGrid DataSource="@subcategories" ID="Grid" @ref="DefaultGrid" AllowFiltering="true" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update", "ExcelExport"})" AllowExcelExport="true" TValue="SubCategories">
             <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
+            <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
             <GridEvents TValue="SubCategories" OnToolbarClick="ToolbarClickHandler" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
             <GridColumns>
-                <GridColumn Field="@nameof(SubCategories.SubCategoryId)" HeaderText="SubCategoryID" IsPrimaryKey="true" Width="100" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.SubCategoryId)" HeaderText="SubCategoryID" IsPrimaryKey="true" Width="100" AllowFiltering="false" AllowEditing="false" AllowAdding="false"></GridColumn>
                 <GridColumn Field="@nameof(SubCategories.SubCategoryName)" HeaderText="SubCategoryName" Width="150"></GridColumn>
-                <GridForeignColumn Field="@nameof(SubCategories.CategoryId)" HeaderText="CategoryName" ForeignKeyValue="CategoryName" ForeignDataSource="@activeCategories" Width="150"></GridForeignColumn>
-                <GridColumn Field="@nameof(SubCategories.Active)" HeaderText="Active" Type="ColumnType.Boolean" DisplayAsCheckBox="true" Width="100" AllowAdding="false"></GridColumn>
-                <GridColumn Field="@nameof(SubCategories.InActiveDate)" HeaderText="Inactive Date" Width="150" Format="yyyy-MM-dd" AllowEditing="false" AllowAdding="false"></GridColumn>
-                <GridColumn Field="@nameof(SubCategories.CreateBy)" HeaderText="Create By" Width="150" AllowEditing="false" AllowAdding="false"></GridColumn>
-                <GridColumn Field="@nameof(SubCategories.CreateDate)" HeaderText="Create Date" Width="150" Format="yyyy-MM-dd" AllowEditing="false" AllowAdding="false"></GridColumn>
-                <GridColumn Field="@nameof(SubCategories.UpdateBy)" HeaderText="Update By" Width="150" AllowEditing="false" AllowAdding="false"></GridColumn>
-                <GridColumn Field="@nameof(SubCategories.UpdateDate)" HeaderText="Update Date" Width="150" Format="yyyy-MM-dd" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridForeignColumn Field="@nameof(SubCategories.CategoryId)" HeaderText="CategoryName" ForeignKeyValue="CategoryName" AllowFiltering="false" ForeignDataSource="@activeCategories" Width="150"></GridForeignColumn>
+                <GridColumn Field="@nameof(SubCategories.Active)" HeaderText="Active" Type="ColumnType.Boolean" DisplayAsCheckBox="true" AllowFiltering="false" Width="100" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.InActiveDate)" HeaderText="Inactive Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.CreateBy)" HeaderText="Create By" Width="150" AllowEditing="false" AllowFiltering="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.CreateDate)" HeaderText="Create Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" AllowEditing="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.UpdateBy)" HeaderText="Update By" Width="150" AllowEditing="false" AllowFiltering="false" AllowAdding="false"></GridColumn>
+                <GridColumn Field="@nameof(SubCategories.UpdateDate)" HeaderText="Update Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" AllowEditing="false" AllowAdding="false"></GridColumn>
             </GridColumns>
         </SfGrid>
     </Authorized>

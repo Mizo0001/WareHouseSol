@@ -92,12 +92,12 @@
         <div class="mb-3">
             <SfGrid DataSource="@transactions" ID="Grid" @ref="DefaultGrid" AllowFiltering="true" Toolbar="@(new List<string>() { "ExcelExport" })" AllowExcelExport="true" TValue="Transactions">
                 <GridEditSettings AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
-                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Menu"></GridFilterSettings>
+                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
                 <GridEvents TValue="Transactions" OnToolbarClick="ToolbarClickHandler" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
                 <GridColumns>
                     <GridColumn Field="@nameof(Transactions.TransactionID)" HeaderText="TransactionID" IsPrimaryKey="true" ValidationRules="@(new ValidationRules { Required = true })" TextAlign="TextAlign.Center" Width="120" AllowFiltering="false" AllowAdding="false" AllowEditing="false"></GridColumn>
                     <GridForeignColumn Field="@nameof(Transactions.WarehouseId)" HeaderText="Warehouse Name" ForeignKeyValue="WarehouseName" ForeignDataSource="@warehouses" Width="150" AllowFiltering="false" AllowEditing="true"></GridForeignColumn>
-                    <GridForeignColumn Field="@nameof(Transactions.ProductId)" HeaderText="Product Name" ForeignKeyValue="ProductName" ForeignDataSource="@activeProducts" Width="150" AllowFiltering="false" AllowEditing="true"></GridForeignColumn>
+                    <GridForeignColumn Field="@nameof(Transactions.ProductId)" HeaderText="Product Name" ForeignKeyValue="ProductName" ForeignDataSource="@activeProducts" Width="150" AllowFiltering="true" AllowEditing="true"></GridForeignColumn>
                     <GridForeignColumn Field="@nameof(Transactions.TransactionTypeID)" HeaderText="Type Name" ForeignKeyValue="TypeName" ForeignDataSource="@types" Width="150" AllowFiltering="false" AllowEditing="true"></GridForeignColumn>
                     <GridColumn Field="@nameof(Transactions.ExpiryDate)" HeaderText="Expiry Date" Width="150" AllowFiltering="false" AllowEditing="true"></GridColumn>
                     <GridColumn Field="@nameof(Transactions.Quantity)" HeaderText="Quantity" ValidationRules="@(new ValidationRules { Required = true })" TextAlign="TextAlign.Center" Width="150" AllowFiltering="false" AllowEditing="true"></GridColumn>
