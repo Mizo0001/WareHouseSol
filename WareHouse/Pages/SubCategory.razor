@@ -11,9 +11,9 @@
 <h3>SubCategories</h3>
 <AuthorizeView>
     <Authorized>
-        <SfGrid DataSource="@subcategories" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update" })" TValue="SubCategories">
+        <SfGrid DataSource="@subcategories" ID="Grid" @ref="DefaultGrid" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update", "ExcelExport"})" AllowExcelExport="true" TValue="SubCategories">
             <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
-            <GridEvents TValue="SubCategories" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
+            <GridEvents TValue="SubCategories" OnToolbarClick="ToolbarClickHandler" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
             <GridColumns>
                 <GridColumn Field="@nameof(SubCategories.SubCategoryId)" HeaderText="SubCategoryID" IsPrimaryKey="true" Width="100" AllowEditing="false" AllowAdding="false"></GridColumn>
                 <GridColumn Field="@nameof(SubCategories.SubCategoryName)" HeaderText="SubCategoryName" Width="150"></GridColumn>
@@ -36,6 +36,7 @@
     private IEnumerable<Categories> categories;
     private IEnumerable<Categories> activeCategories;
     private ClaimsPrincipal user;
+    private SfGrid<SubCategories> DefaultGrid;
 
 
     
@@ -83,6 +84,13 @@
         {
             await LoadSubCategories();
             StateHasChanged();
+        }
+    }
+    public async Task ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args.Item.Id == "Grid_excelexport") //Id is combination of Grid's ID and itemname
+        {
+            await this.DefaultGrid.ExcelExport();
         }
     }
 }

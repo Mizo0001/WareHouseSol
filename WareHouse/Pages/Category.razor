@@ -14,9 +14,9 @@
 
 <AuthorizeView>
     <Authorized>
-        <SfGrid DataSource="@categories" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update" })" TValue="Categories">
+        <SfGrid DataSource="@categories" ID="Grid" @ref="DefaultGrid" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update","ExcelExport" })" AllowExcelExport="true" TValue="Categories">
             <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
-            <GridEvents TValue="Categories" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
+            <GridEvents TValue="Categories" OnToolbarClick="ToolbarClickHandler" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
             <GridColumns>
                 <GridColumn Field="@nameof(Categories.CategoryId)" HeaderText="Category ID" IsPrimaryKey="true" ValidationRules="@(new ValidationRules { Required = true })" TextAlign="TextAlign.Center" Width="120" AllowAdding="false" AllowEditing="false"></GridColumn>
                 <GridColumn Field="@nameof(Categories.CategoryName)" HeaderText="Category Name" ValidationRules="@(new ValidationRules { Required = true })" Width="150"></GridColumn>
@@ -36,6 +36,8 @@
 @code {
     private IEnumerable<Categories> categories;
     private ClaimsPrincipal user;
+    private SfGrid<Categories> DefaultGrid;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,6 +75,13 @@
         {
             await LoadCategories(); 
             StateHasChanged(); 
+        }
+    }
+    public async Task ToolbarClickHandler(Syncfusion.Blazor.Navigations.ClickEventArgs args)
+    {
+        if (args.Item.Id == "Grid_excelexport") //Id is combination of Grid's ID and itemname
+        {
+            await this.DefaultGrid.ExcelExport();
         }
     }
 }
