@@ -99,7 +99,7 @@
                     <GridForeignColumn Field="@nameof(Transactions.WarehouseId)" HeaderText="Warehouse Name" ForeignKeyValue="WarehouseName" ForeignDataSource="@warehouses" Width="150" AllowFiltering="false" AllowEditing="true"></GridForeignColumn>
                     <GridForeignColumn Field="@nameof(Transactions.ProductId)" HeaderText="Product Name" ForeignKeyValue="ProductName" ForeignDataSource="@activeProducts" Width="150" AllowFiltering="true" AllowEditing="true"></GridForeignColumn>
                     <GridForeignColumn Field="@nameof(Transactions.TransactionTypeID)" HeaderText="Type Name" ForeignKeyValue="TypeName" ForeignDataSource="@types" Width="150" AllowFiltering="false" AllowEditing="true"></GridForeignColumn>
-                    <GridColumn Field="@nameof(Transactions.ExpiryDate)" HeaderText="Expiry Date" Width="150" AllowFiltering="false" AllowEditing="true"></GridColumn>
+                    <GridColumn Field="@nameof(Transactions.ExpiryDate)" HeaderText="Expiry Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" AllowEditing="true"></GridColumn>
                     <GridColumn Field="@nameof(Transactions.Quantity)" HeaderText="Quantity" ValidationRules="@(new ValidationRules { Required = true })" TextAlign="TextAlign.Center" Width="150" AllowFiltering="false" AllowEditing="true"></GridColumn>
                     <GridColumn Field="@nameof(Transactions.TransactionDate)" HeaderText="Transaction Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" AllowEditing="true" AllowAdding="false"></GridColumn>
                     <GridColumn Field="@nameof(Transactions.CreateBy)" HeaderText="Create By" Width="150" AllowAdding="false" AllowEditing="false" AllowFiltering="false"></GridColumn>

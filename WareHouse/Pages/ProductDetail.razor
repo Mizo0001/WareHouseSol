@@ -27,7 +27,7 @@
                     <GridColumn Field="@nameof(ProductDetails.ExpiryDate)" HeaderText="Expiry Date" AllowFiltering="false" Type="ColumnType.DateTime" Format="yyyy-MM-dd" Width="150" AllowAdding="true" AllowEditing="false"></GridColumn>
                     <GridColumn Field="@nameof(ProductDetails.Balance)" HeaderText="Balance" ValidationRules="@(new ValidationRules { Required = true })" TextAlign="TextAlign.Center" Width="150" AllowFiltering="false" AllowEditing="false"></GridColumn>
                     <GridColumn Field="@nameof(ProductDetails.CreateBy)" HeaderText="Create By" AllowFiltering="false" Width="150" AllowEditing="false" AllowAdding="false"></GridColumn>
-                    <GridColumn Field="@nameof(ProductDetails.CreateDate)" HeaderText="Create Date" AllowFiltering="false" Width="150" Format="yyyy-MM-dd" AllowEditing="false" AllowAdding="false"></GridColumn>
+                    <GridColumn Field="@nameof(ProductDetails.CreateDate)" HeaderText="Create Date" Visible = "false "AllowFiltering="false" Width="150" Format="yyyy-MM-dd" AllowEditing="false" AllowAdding="false"></GridColumn>
                     <GridColumn Field="@nameof(ProductDetails.UpdateBy)" HeaderText="Update By" Width="150" AllowFiltering="false" AllowEditing="false" AllowAdding="false"></GridColumn>
                     <GridColumn Field="@nameof(ProductDetails.UpdateDate)" HeaderText="Update Date" Width="150" AllowFiltering="false" Format="yyyy-MM-dd" AllowEditing="false" AllowAdding="false"></GridColumn>
                 </GridColumns>
