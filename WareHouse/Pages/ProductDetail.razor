@@ -16,7 +16,7 @@
     <Authorized>
         @if (products != null)
         {
-            <SfGrid DataSource="@productdetails" ID="Grid" @ref="DefaultGrid" AllowFiltering="true" Toolbar="@(new List<string>() { "Add", "Cancel", "Update", "ExcelExport" })" AllowExcelExport="true" TValue="ProductDetails">
+            <SfGrid DataSource="@productdetails" ID="Grid" @ref="DefaultGrid" AllowFiltering="true"  AllowExcelExport="true" TValue="ProductDetails">
                 <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
                 <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
                 <GridEvents TValue="ProductDetails" OnToolbarClick="ToolbarClickHandler" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
