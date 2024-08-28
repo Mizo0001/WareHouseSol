@@ -10,32 +10,38 @@
 @using System.Threading.Tasks
 
 
-<h3>WareHouse</h3>
-
+<!-- Header Section -->
+<div style="text-align: center; margin-bottom: 20px;">
+    <h3>WareHouse</h3>
+</div>
 
 <AuthorizeView>
     <Authorized>
-        <SfGrid DataSource="@warehouses" ID="Grid" @ref="DefaultGrid" AllowFiltering="true" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update","ExcelExport" })" AllowExcelExport="true" TValue="WareHouses">
-            <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
-            <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
-            <GridEvents TValue="WareHouses" OnToolbarClick="ToolbarClickHandler" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
-            <GridColumns>
-                <GridColumn Field="@nameof(WareHouses.WarehouseId)" HeaderText="WareHouse ID" AllowFiltering="false" IsPrimaryKey="true" ValidationRules="@(new ValidationRules { Required = true })" TextAlign="TextAlign.Center" Width="120" AllowAdding="false" AllowEditing="false"></GridColumn>
-                <GridColumn Field="@nameof(WareHouses.WarehouseName)" HeaderText="WareHosue Name" ValidationRules="@(new ValidationRules { Required = true })" Width="150"></GridColumn>
-                <GridColumn Field="@nameof(WareHouses.Location)" HeaderText="Location" AllowFiltering="false" Width="150"></GridColumn>
-                <GridColumn Field="@nameof(WareHouses.Active)" HeaderText="Active" AllowFiltering="false" Type="ColumnType.Boolean" DisplayAsCheckBox="true" Width="100"></GridColumn>
-                <GridColumn Field="@nameof(WareHouses.InactiveDate)" HeaderText="Inactive Date" AllowFiltering="false" Type="ColumnType.Date" Format="yyyy-MM-dd" Width="150" AllowAdding="false" AllowEditing="false"></GridColumn>
-                <GridColumn Field="@nameof(WareHouses.CreateBy)" HeaderText="Create By" Width="150" AllowFiltering="false" AllowAdding="false" AllowEditing="false"></GridColumn>
-                <GridColumn Field="@nameof(WareHouses.CreateDate)" HeaderText="Create Date" Type="ColumnType.Date" AllowFiltering="false" Visible ="false" Format="yyyy-MM-dd" Width="150" AllowAdding="false" AllowEditing="false"></GridColumn>
-                <GridColumn Field="@nameof(WareHouses.UpdateBy)" HeaderText="Update By" Width="150" AllowAdding="false" AllowFiltering="false" AllowEditing="false"></GridColumn>
-                <GridColumn Field="@nameof(WareHouses.UpdateDate)" HeaderText="Update Date" Type="ColumnType.Date" AllowFiltering="false" Format="yyyy-MM-dd" Width="150" AllowAdding="false" AllowEditing="false"></GridColumn>
-            </GridColumns>
-        </SfGrid>
+        <!-- Grid Section -->
+        <div class="container">
+            <SfGrid DataSource="@warehouses" ID="Grid" @ref="DefaultGrid" AllowFiltering="true" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update","ExcelExport" })" AllowExcelExport="true" TValue="WareHouses" Width="100%">
+                <GridEditSettings AllowAdding="true" AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
+                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+                <GridEvents TValue="WareHouses" OnToolbarClick="ToolbarClickHandler" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
+                <GridColumns>
+                    <GridColumn Field="@nameof(WareHouses.WarehouseId)" HeaderText="WareHouse ID" AllowFiltering="false" IsPrimaryKey="true" ValidationRules="@(new ValidationRules { Required = true })" TextAlign="TextAlign.Center" Width="120" AllowAdding="false" AllowEditing="false"></GridColumn>
+                    <GridColumn Field="@nameof(WareHouses.WarehouseName)" HeaderText="WareHouse Name" ValidationRules="@(new ValidationRules { Required = true })" Width="150"></GridColumn>
+                    <GridColumn Field="@nameof(WareHouses.Location)" HeaderText="Location" AllowFiltering="false" Width="150"></GridColumn>
+                    <GridColumn Field="@nameof(WareHouses.Active)" HeaderText="Active" AllowFiltering="false" Type="ColumnType.Boolean" DisplayAsCheckBox="true" Width="100"></GridColumn>
+                    <GridColumn Field="@nameof(WareHouses.InactiveDate)" HeaderText="Inactive Date" AllowFiltering="false" Type="ColumnType.Date" Format="yyyy-MM-dd" Width="150" AllowAdding="false" AllowEditing="false"></GridColumn>
+                    <GridColumn Field="@nameof(WareHouses.CreateBy)" HeaderText="Create By" Width="150" AllowFiltering="false" AllowAdding="false" AllowEditing="false"></GridColumn>
+                    <GridColumn Field="@nameof(WareHouses.CreateDate)" HeaderText="Create Date" Type="ColumnType.Date" AllowFiltering="false" Visible="false" Format="yyyy-MM-dd" Width="150" AllowAdding="false" AllowEditing="false"></GridColumn>
+                    <GridColumn Field="@nameof(WareHouses.UpdateBy)" HeaderText="Update By" Width="150" AllowAdding="false" AllowFiltering="false" AllowEditing="false"></GridColumn>
+                    <GridColumn Field="@nameof(WareHouses.UpdateDate)" HeaderText="Update Date" Type="ColumnType.Date" AllowFiltering="false" Format="yyyy-MM-dd" Width="150" AllowAdding="false" AllowEditing="false"></GridColumn>
+                </GridColumns>
+            </SfGrid>
+        </div>
     </Authorized>
     <NotAuthorized>
         <p>You must be logged in to access this page.</p>
     </NotAuthorized>
 </AuthorizeView>
+
 @code {
     private IEnumerable<WareHouses> warehouses;
     private ClaimsPrincipal user;

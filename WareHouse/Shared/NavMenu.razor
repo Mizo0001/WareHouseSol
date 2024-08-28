@@ -1,69 +1,74 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">WareHouse</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+﻿<div class="top-row ps-3 navbar navbar-dark" style="background-color: #37517e;">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <!-- Menu Button and Warehouse Name -->
+        <div class="d-flex align-items-center">
+            <!-- Menu Button -->
+            <button type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu" style="background: none; border: none; padding: 0;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Warehouse Name with margin -->
+            <a class="navbar-brand ms-2" href="#" style="color: white;">WareHouse</a>
+        </div>
+
+        <!-- Login Display and About Link -->
+        <div class="d-flex align-items-center">
+            <LoginDisplay />
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank" class="ms-3" style="color: white;">About</a>
+        </div>
     </div>
 </div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="products">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Products
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="categories">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Categories
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="subcategories">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> SubCategories
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="transactiontypes">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> TransactionTypes
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="transactions">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Transactions
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="productdetails">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> ProductDetails
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="warehouses">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> WareHouses
-            </NavLink>
-        </div>
-    </nav>
+
+
+<!-- Off-canvas sidebar -->
+<div class="offcanvas offcanvas-start visible" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <nav class="flex-column">
+            <div class="nav-item px-3" style="margin-bottom: 1rem;">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All" style="font-size: 1.25rem; padding: 0.5rem 1rem;">
+                    <span class="oi oi-home" aria-hidden="true" style="margin-right: 0.5rem;"></span> Home
+                </NavLink>
+            </div>
+            <div class="nav-item px-3" style="margin-bottom: 1rem;">
+                <NavLink class="nav-link" href="products" style="font-size: 1.25rem; padding: 0.5rem 1rem;">
+                    <span class="oi oi-list-rich" aria-hidden="true" style="margin-right: 0.5rem;"></span> Products
+                </NavLink>
+            </div>
+            <div class="nav-item px-3" style="margin-bottom: 1rem;">
+                <NavLink class="nav-link" href="categories" style="font-size: 1.25rem; padding: 0.5rem 1rem;">
+                    <span class="oi oi-list-rich" aria-hidden="true" style="margin-right: 0.5rem;"></span> Categories
+                </NavLink>
+            </div>
+            <div class="nav-item px-3" style="margin-bottom: 1rem;">
+                <NavLink class="nav-link" href="subcategories" style="font-size: 1.25rem; padding: 0.5rem 1rem;">
+                    <span class="oi oi-list-rich" aria-hidden="true" style="margin-right: 0.5rem;"></span> SubCategories
+                </NavLink>
+            </div>
+            <div class="nav-item px-3" style="margin-bottom: 1rem;">
+                <NavLink class="nav-link" href="transactiontypes" style="font-size: 1.25rem; padding: 0.5rem 1rem;">
+                    <span class="oi oi-list-rich" aria-hidden="true" style="margin-right: 0.5rem;"></span> TransactionTypes
+                </NavLink>
+            </div>
+            <div class="nav-item px-3" style="margin-bottom: 1rem;">
+                <NavLink class="nav-link" href="transactions" style="font-size: 1.25rem; padding: 0.5rem 1rem;">
+                    <span class="oi oi-list-rich" aria-hidden="true" style="margin-right: 0.5rem;"></span> Transactions
+                </NavLink>
+            </div>
+            <div class="nav-item px-3" style="margin-bottom: 1rem;">
+                <NavLink class="nav-link" href="productdetails" style="font-size: 1.25rem; padding: 0.5rem 1rem;">
+                    <span class="oi oi-list-rich" aria-hidden="true" style="margin-right: 0.5rem;"></span> ProductDetails
+                </NavLink>
+            </div>
+            <div class="nav-item px-3" style="margin-bottom: 1rem;">
+                <NavLink class="nav-link" href="warehouses" style="font-size: 1.25rem; padding: 0.5rem 1rem;">
+                    <span class="oi oi-list-rich" aria-hidden="true" style="margin-right: 0.5rem;"></span> WareHouses
+                </NavLink>
+            </div>
+        </nav>
+    </div>
 </div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}

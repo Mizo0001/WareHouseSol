@@ -10,32 +10,39 @@
 @using Syncfusion.Blazor.DropDowns
 @using Microsoft.AspNetCore.Components
 
-<h3>Products</h3>
+<!-- Header Section -->
+<div style="text-align: center; margin-bottom: 20px;">
+    <h3>Products</h3>
+</div>
 
 <AuthorizeView>
     <Authorized>
-        <SfGrid DataSource="@products" ID="Grid" @ref="DefaultGrid" AllowFiltering="true" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update","ExcelExport"})" AllowExcelExport="true" TValue="Products">
-            <GridEditSettings AllowAdding="true" AllowDeleting="false" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
-            <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
-            <GridEvents TValue="Products" OnToolbarClick="ToolbarClickHandler" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
-            <GridColumns>
-                <GridColumn Field="@nameof(Products.ProductId)" HeaderText="ProductID" IsPrimaryKey="true" Width="100" AllowFiltering="false" AllowAdding="false" AllowEditing="false"></GridColumn>
-                <GridColumn Field="@nameof(Products.ProductName)" HeaderText="ProductName" Width="150"></GridColumn>
-                <GridForeignColumn Field="@nameof(Products.SubCategoryId)" HeaderText="SubCategoryName" ForeignKeyValue="SubCategoryName" AllowFiltering="false" ForeignDataSource="@activeSubCategories" Width="150"></GridForeignColumn>
-                <GridColumn Field="@nameof(Products.Active)" HeaderText="Active" Type="ColumnType.Boolean" DisplayAsCheckBox="true" AllowFiltering="false" Width="100" AllowAdding="false"></GridColumn>
-                <GridColumn Field="@nameof(Products.InActiveDate)" HeaderText="Inactive Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" AllowEditing="false" AllowAdding="false"></GridColumn>
-                <GridColumn Field="@nameof(Products.CreateBy)" HeaderText="Create By" Width="150" AllowEditing="false" AllowFiltering="false" AllowAdding="false"></GridColumn>
-                <GridColumn Field="@nameof(Products.CreateDate)" HeaderText="Create Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" Visible = "false" AllowEditing="false" AllowAdding="false"></GridColumn>
-                <GridColumn Field="@nameof(Products.UpdateBy)" HeaderText="Update By" Width="150" AllowEditing="false" AllowFiltering="false" AllowAdding="false"></GridColumn>
-                <GridColumn Field="@nameof(Products.UpdateDate)" HeaderText="Update Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" AllowEditing="false " AllowAdding="false"></GridColumn>
-                <GridColumn Field="@nameof(Products.Balance)" HeaderText="Balance" Width="150" AllowFiltering="false"></GridColumn>
-            </GridColumns>
-        </SfGrid>
+        <!-- Grid Section -->
+        <div class="container">
+            <SfGrid DataSource="@products" ID="Grid" @ref="DefaultGrid" AllowFiltering="true" Toolbar="@(new List<string>() { "Add", "Edit", "Cancel", "Update", "ExcelExport" })" AllowExcelExport="true" TValue="Products"  Width="100%">
+                <GridEditSettings AllowAdding="true" AllowDeleting="false" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
+                <GridFilterSettings Type="Syncfusion.Blazor.Grids.FilterType.Excel"></GridFilterSettings>
+                <GridEvents TValue="Products" OnToolbarClick="ToolbarClickHandler" OnActionBegin="@(ActionBeginHandler)" OnActionComplete="@(ActionCompleteHandler)"></GridEvents>
+                <GridColumns>
+                    <GridColumn Field="@nameof(Products.ProductId)" HeaderText="ProductID" IsPrimaryKey="true" Width="100" AllowFiltering="false" AllowAdding="false" AllowEditing="false"></GridColumn>
+                    <GridColumn Field="@nameof(Products.ProductName)" HeaderText="ProductName" Width="150"></GridColumn>
+                    <GridForeignColumn Field="@nameof(Products.SubCategoryId)" HeaderText="SubCategoryName" ForeignKeyValue="SubCategoryName" AllowFiltering="false" ForeignDataSource="@activeSubCategories" Width="150"></GridForeignColumn>
+                    <GridColumn Field="@nameof(Products.Active)" HeaderText="Active" Type="ColumnType.Boolean" DisplayAsCheckBox="true" AllowFiltering="false" Width="100" AllowAdding="false"></GridColumn>
+                    <GridColumn Field="@nameof(Products.InActiveDate)" HeaderText="Inactive Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" AllowEditing="false" AllowAdding="false"></GridColumn>
+                    <GridColumn Field="@nameof(Products.CreateBy)" HeaderText="Create By" Width="150" AllowEditing="false" AllowFiltering="false" AllowAdding="false"></GridColumn>
+                    <GridColumn Field="@nameof(Products.CreateDate)" HeaderText="Create Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" Visible="false" AllowEditing="false" AllowAdding="false"></GridColumn>
+                    <GridColumn Field="@nameof(Products.UpdateBy)" HeaderText="Update By" Width="150" AllowEditing="false" AllowFiltering="false" AllowAdding="false"></GridColumn>
+                    <GridColumn Field="@nameof(Products.UpdateDate)" HeaderText="Update Date" Width="150" Format="yyyy-MM-dd" AllowFiltering="false" AllowEditing="false" AllowAdding="false"></GridColumn>
+                    <GridColumn Field="@nameof(Products.Balance)" HeaderText="Balance" Width="150" AllowFiltering="false"></GridColumn>
+                </GridColumns>
+            </SfGrid>
+        </div>
     </Authorized>
     <NotAuthorized>
         <p>You must be logged in to access this page.</p>
     </NotAuthorized>
 </AuthorizeView>
+
 
 @code {
     private IEnumerable<Products> products;

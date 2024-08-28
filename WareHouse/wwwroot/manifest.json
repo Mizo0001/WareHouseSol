@@ -1,0 +1,20 @@
+{
+  "short_name": "WareHouse",
+  "name": "WareHouse Application",
+  "icons": [
+    {
+      "src": "/assets/img/favicon.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/img/apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff"
+}

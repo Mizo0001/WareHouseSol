@@ -19,87 +19,93 @@
 @using System.Threading.Tasks
 @using Syncfusion.Blazor.SplitButtons
 
-<h3>Transactions</h3>
+<!-- Center-Aligned Container -->
+<div class="container">
+    
+    <!-- Header Section -->
+    <h3 style="text-align: center; margin: 20px;">Transactions</h3>
 
-<AuthorizeView>
-    <Authorized>
-
+    <!-- Date Range Picker and Filters -->
+    <div class="mb-3">
         <p class="mb-3">Pick a Date</p>
+        <SfDateRangePicker TValue="DateTime?" StartDate="@startDate" EndDate="@endDate">
+            <DateRangePickerEvents TValue="DateTime?" ValueChange="@onChange"></DateRangePickerEvents>
+        </SfDateRangePicker>
+    </div>
 
-        <div class="mb-3">
-            <SfDateRangePicker TValue="DateTime?" StartDate="@startDate" EndDate="@endDate">
-                <DateRangePickerEvents TValue="DateTime?" ValueChange="@onChange"></DateRangePickerEvents>
-            </SfDateRangePicker>
+    <div class="row mb-3">
+        <div class="col-lg-6 mb-3">
+            <div class="control-wrapper">
+                <label class="example-label">Transaction Type</label>
+                <SfDropDownList TValue="int" DataSource="@types" Placeholder="Select a transaction type" @bind-Value="selectedTransactionTypeId" TItem="TransactionTypes">
+                    <DropDownListFieldSettings Text="TypeName" Value="TransactionTypeID"></DropDownListFieldSettings>
+                    <DropDownListEvents TValue="int" TItem="TransactionTypes" ValueChange="ChangeTransactionType"></DropDownListEvents>
+                </SfDropDownList>
+            </div>
         </div>
-
-        <div class="row mb-3">
-            <div class="col-lg-6 mb-3">
-                <div class="control-wrapper">
-                    <label class="example-label">Transaction Type</label>
-                    <SfDropDownList TValue="int" DataSource="@types" Placeholder="Select a transaction type" @bind-Value="selectedTransactionTypeId" TItem="TransactionTypes">
-                        <DropDownListFieldSettings Text="TypeName" Value="TransactionTypeID"></DropDownListFieldSettings>
-                        <DropDownListEvents TValue="int" TItem="TransactionTypes" ValueChange="ChangeTransactionType"></DropDownListEvents>
+        <div class="col-lg-6 mb-3">
+            <div class="control-wrapper">
+                <div class="cascading">
+                    <label class="example-label">Warehouse</label>
+                    <SfDropDownList TValue="int" DataSource="@warehouses" Placeholder="Select a warehouse" @bind-Value="selectedWarehouseId" TItem="WareHouses">
+                        <DropDownListEvents TItem="WareHouses" TValue="int" ValueChange="ChangeWareHouse"></DropDownListEvents>
+                        <DropDownListFieldSettings Text="WarehouseName" Value="WarehouseId"></DropDownListFieldSettings>
                     </SfDropDownList>
                 </div>
             </div>
-            <div class="col-lg-6 mb-3">
-                <div class="control-wrapper">
-                    <div class="cascading">
-                        <label class="example-label">Warehouse</label>
-                        <SfDropDownList TValue="int" DataSource="@warehouses" Placeholder="Select a warehouse" @bind-Value="selectedWarehouseId" TItem="WareHouses">
-                            <DropDownListEvents TItem="WareHouses" TValue="int" ValueChange="ChangeWareHouse"></DropDownListEvents>
-                            <DropDownListFieldSettings Text="WarehouseName" Value="WarehouseId"></DropDownListFieldSettings>
-                        </SfDropDownList>
-                    </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-lg-6 mb-3">
+            <div class="control-wrapper">
+                <div class="cascading">
+                    <label class="example-label">Product</label>
+                    <SfDropDownList TValue="int" TItem="ProductDetails" Placeholder="Select a product" @bind-Value="selectedDetailId" DataSource="@filteredProducts">
+                        <DropDownListTemplates TItem="ProductDetails">
+                            <ItemTemplate Context="itemContext">
+                                <span>
+                                    <span class="ProductName">@((itemContext as ProductDetails).ProductName)</span>
+                                    <span class="ExpiryDate">-@((itemContext as ProductDetails).ExpiryDate)</span>
+                                </span>
+                            </ItemTemplate>
+                        </DropDownListTemplates>
+                        <DropDownListFieldSettings Text="ProductName" Value="DetailID"></DropDownListFieldSettings>
+                    </SfDropDownList>
                 </div>
             </div>
         </div>
+        <div class="col-lg-6 mb-3">
+            <div class="control-wrapper">
+                <label class="example-label">Quantity</label>
+                <SfNumericTextBox TValue="int" Placeholder="Enter Quantity" @bind-Value="quantity"></SfNumericTextBox>
+            </div>
+        </div>
+    </div>
 
+    @if (isExpiryDateVisible)
+    {
         <div class="row mb-3">
             <div class="col-lg-6 mb-3">
                 <div class="control-wrapper">
-                    <div class="cascading">
-                        <label class="example-label">Product</label>
-                        <SfDropDownList TValue="int" TItem="ProductDetails" Placeholder="Select a product" @bind-Value="selectedDetailId" DataSource="@filteredProducts">
-                            <DropDownListTemplates TItem="ProductDetails">
-                                <ItemTemplate Context="itemContext">
-                                    <span>
-                                        <span class="ProductName">@((itemContext as ProductDetails).ProductName)</span>
-                                        <span class="ExpiryDate">-@((itemContext as ProductDetails).ExpiryDate)</span>
-                                    </span>
-                                </ItemTemplate>
-                            </DropDownListTemplates>
-                            <DropDownListFieldSettings Text="ProductName" Value="DetailID"></DropDownListFieldSettings>
-                        </SfDropDownList>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 mb-3">
-                <div class="control-wrapper">
-                    <label class="example-label">Quantity</label>
-                    <SfNumericTextBox TValue="int" Placeholder="Enter Quantity" @bind-Value="quantity"></SfNumericTextBox>
+                    <label class="example-label">Expiry Date</label>
+                    <SfDatePicker TValue="DateTime?" @bind-Value="selectedExpiryDate" Placeholder="Select Expiry Date"></SfDatePicker>
                 </div>
             </div>
         </div>
+    }
 
-        @if (isExpiryDateVisible)
-        {
-            <div class="row mb-3">
-                <div class="col-lg-6 mb-3">
-                    <div class="control-wrapper">
-                        <label class="example-label">Expiry Date</label>
-                        <SfDatePicker TValue="DateTime?" @bind-Value="selectedExpiryDate" Placeholder="Select Expiry Date"></SfDatePicker>
-                    </div>
-                </div>
-            </div>
-        }
+    <div class="mb-3">
+        <SfProgressButton EnableProgress="true" Content="Submit Transaction" CssClass="bg-success">
+            <ProgressButtonEvents OnBegin="SubmitTransaction"></ProgressButtonEvents>
+        </SfProgressButton>
+    </div>
 
-        <div class="mb-3">
-            <SfProgressButton EnableProgress="true" Content="Submit Transaction" CssClass="bg-success">
-                <ProgressButtonEvents OnBegin="SubmitTransaction"></ProgressButtonEvents>
-            </SfProgressButton>
-        </div>
 
+
+<!-- Authorize View for Grid -->
+<AuthorizeView>
+    <Authorized>
         <div class="mb-3">
             <SfGrid DataSource="@transactions" ID="Grid" @ref="DefaultGrid" AllowFiltering="true" Toolbar="@(new List<string>() { "ExcelExport" })" AllowExcelExport="true" TValue="Transactions">
                 <GridEditSettings AllowDeleting="true" AllowEditing="true" Mode="EditMode.Normal"></GridEditSettings>
@@ -118,13 +124,13 @@
                 </GridColumns>
             </SfGrid>
         </div>
-
     </Authorized>
     <NotAuthorized>
         <p>You must be logged in to access this page.</p>
     </NotAuthorized>
 </AuthorizeView>
 
+</div>
 <SfToast ID="toast_default" @ref="ToastObj">
     <ToastPosition X="Right"></ToastPosition>
 </SfToast>
